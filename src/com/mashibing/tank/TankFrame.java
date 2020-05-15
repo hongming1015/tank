@@ -9,7 +9,7 @@ import java.awt.event.WindowEvent;
 public class TankFrame extends Frame {
 
     //窗口宽度和高度
-    private int windowWidth = 800, WindowHeight = 600;
+    private int windowWidth = 800,  WindowHeight = 600;
 
     //第一个坦克的位置
     private int gamePlayerTankX = 200, gamePlayerTankY = 200;
