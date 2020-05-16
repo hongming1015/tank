@@ -1,13 +1,16 @@
 package com.mashibing.tank;
 
+import sun.util.calendar.Gregorian;
+
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.Clock;
 
 public class TankFrame extends Frame {
 
     //窗口宽度和高度
-    private final static int WINDOW_WIDTH = 800,  WINDOW_HEIGHT = 600;
+    public final static int WINDOW_WIDTH = 800,  WINDOW_HEIGHT = 600;
 
     Tank tank = new Tank();
 
@@ -33,4 +36,20 @@ public class TankFrame extends Frame {
        tank.initTank(g);
     }
 
+
+    private Image offScreenImage = null;
+
+    @Override
+    public void update(Graphics g) {
+        if (offScreenImage == null) {
+            offScreenImage = this.createImage(WINDOW_WIDTH, WINDOW_HEIGHT);
+        }
+        Graphics gOffScreen = offScreenImage.getGraphics();
+        Color color = gOffScreen.getColor();
+        gOffScreen.setColor(Color.black);
+        gOffScreen.fillRect(0,0,WINDOW_WIDTH,WINDOW_HEIGHT);
+        gOffScreen.setColor(color);
+        paint(gOffScreen);
+        g.drawImage(offScreenImage,0,0,null);
+    }
 }

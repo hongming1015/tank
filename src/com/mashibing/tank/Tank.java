@@ -1,8 +1,15 @@
 package com.mashibing.tank;
 
+import com.sun.imageio.stream.CloseableDisposerRecord;
+import sun.plugin2.util.ColorUtil;
+
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Queue;
 
 /**
  * 坦克
@@ -16,7 +23,7 @@ public class Tank {
     private int width = 50, height = 50;
 
     //坦克每次移动距离
-    private int SPEED = 10;
+    private int speed = 5;
 
     //坦克是否上下移动
     private boolean isLeft, isUp, isRight, isDown;
@@ -26,6 +33,9 @@ public class Tank {
 
     //坦克朝向
     private Dir dir = Dir.UP;
+
+    //坦克射出去的子弹
+    List<Bullet> bullets = new ArrayList<>();
 
     public Tank() {
     }
@@ -43,24 +53,39 @@ public class Tank {
     }
 
     public void initTank(Graphics graphics){
+        //绘制坦克
         draw(graphics);
+        //坦克移动
         movable();
+        //绘制坦克子弹
+        Iterator<Bullet> iterator = bullets.iterator();
+        while (iterator.hasNext()){
+            Bullet bullet = iterator.next();
+            bullet.draw(graphics);
+            Bullet removeBullet = bullet.movable();
+            if (removeBullet != null) {
+                iterator.remove();
+            }
+        }
     }
 
     public void movable() {
         if (isUp) {
-            setY(getY() - getSPEED());
+            setY(getY() - getSpeed());
         } else if (isDown) {
-            setY(getY() + getSPEED());
+            setY(getY() + getSpeed());
         } else if (isLeft) {
-            setX(getX() - getSPEED());
+            setX(getX() - getSpeed());
         } else if (isRight) {
-            setX(getX() + getSPEED());
+            setX(getX() + getSpeed());
         }
     }
 
     public void draw(Graphics graphics) {
-        graphics.fillRect(getX(), getY(), getWidth(), getHeight());
+         Color c = graphics.getColor();
+         graphics.setColor(Color.yellow);
+         graphics.fillRect(getX(), getY(), getWidth(), getHeight());
+         graphics.setColor(c);
     }
 
     public int getWidth() {
@@ -79,12 +104,12 @@ public class Tank {
         this.height = height;
     }
 
-    public int getSPEED() {
-        return SPEED;
+    public int getSpeed() {
+        return speed;
     }
 
-    public void setSPEED(int SPEED) {
-        this.SPEED = SPEED;
+    public void setSpeed(int speed) {
+        this.speed = speed;
     }
 
     public int getX() {
@@ -141,6 +166,7 @@ public class Tank {
                     isDown=true;
                     break;
                 case KeyEvent.VK_SPACE:
+                    shooting();
                     break;
             }
         }
@@ -163,6 +189,12 @@ public class Tank {
             }
         }
 
+    }
+
+
+    public void shooting(){
+        Bullet bullet = new Bullet(this.x+15, this.y+15,this.dir);
+        bullets.add(bullet);
     }
 
 
