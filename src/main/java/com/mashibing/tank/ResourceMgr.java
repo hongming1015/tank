@@ -22,21 +22,22 @@ public class ResourceMgr {
 
     static  {
         try {
-            tankUp = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("resource/images/BadTank1.png"));
+            System.out.println(ResourceMgr.class.getClassLoader().getResource("").getPath());
+            tankUp = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/BadTank1.png"));
             tankLeft = ImageUtil.rotateImage(tankUp,-90);
             tankRight = ImageUtil.rotateImage(tankUp,90);
             tankDown = ImageUtil.rotateImage(tankUp,180);
 
-            bulletUp = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("resource/images/bulletU.png"));
+            bulletUp = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/bulletU.png"));
             bulletLeft = ImageUtil.rotateImage(bulletUp,-90);
             bulletRight = ImageUtil.rotateImage(bulletUp,90);
             bulletDown = ImageUtil.rotateImage(bulletUp,180);
 
             for (int i = 0; i < explodes.length; i++) {
-                explodes[i] = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("resource/images/e"+(i+1)+".gif"));
+                explodes[i] = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/e"+(i+1)+".gif"));
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
