@@ -1,4 +1,9 @@
-package com.mashibing.tank;
+package com.mashibing;
+
+import com.mashibing.bullet.Bullets;
+import com.mashibing.explode.Explodes;
+import com.mashibing.tank.BaseTank;
+import com.mashibing.tank.Tanks;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -34,14 +39,15 @@ public class TankFrame extends Frame {
     public void paint(Graphics g) {
         Tanks.initTanks(g);
         Explodes.booms(g);
+        Bullets.initBullet(g);
     }
 
     public void drawBulletNumber(Graphics g) {
-        int totalNumber = 0;
-        for (Tank tank : Tanks.getTanks()) {
-            totalNumber += tank.getBullets().size();
-        }
-        g.drawString("總共子彈數量:"+totalNumber,10,30);
+//        int totalNumber = 0;
+//        for (BaseTank tank : Tanks.getTanks()) {
+//            totalNumber += tank.getBullets().size();
+//        }
+//        g.drawString("總共子彈數量:"+totalNumber,10,30);
     }
 
     public void drawTankNumber(Graphics g){

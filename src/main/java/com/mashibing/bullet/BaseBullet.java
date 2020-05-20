@@ -1,14 +1,20 @@
-package com.mashibing.tank;
+package com.mashibing.bullet;
+
+import com.mashibing.Dir;
+import com.mashibing.explode.BaseExplode;
+import com.mashibing.explode.Explode;
+import com.mashibing.explode.Explodes;
+import com.mashibing.TankFrame;
+import com.mashibing.resource.ResourceMgr;
+import com.mashibing.tank.BaseTank;
+import com.mashibing.tank.Tanks;
+import lombok.Data;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Iterator;
 
-/**
- * 子弹
- */
-public class Bullet {
-
+@Data
+public abstract class BaseBullet {
     //子弹位置
     private int x, y;
 
@@ -22,17 +28,17 @@ public class Bullet {
     private Dir dir;
 
     //发射的坦克
-    private Tank tank;
+    private BaseTank tank;
 
     //子弹是否存活
     private boolean living = true;
 
     //爆照效果
-    private Explode explode = new Explode(this);
+    private BaseExplode explode = new Explode(this);
 
     Rectangle rectangle  = new Rectangle(getX(),getY(),getWidth(),getHeight());
 
-    public Bullet(int x, int y, Dir dir,Tank tank) {
+    public BaseBullet(int x, int y, Dir dir, BaseTank tank) {
         this.x = x;
         this.y = y;
         this.dir = dir;
@@ -75,7 +81,7 @@ public class Bullet {
     }
 
     public void die(){
-        isLiving(false);
+        setLiving(false);
     }
 
     /**
@@ -108,7 +114,7 @@ public class Bullet {
      */
     private void crossJudgment(){
         if(x < 0 || x > TankFrame.WINDOW_WIDTH || y < 0 || y > TankFrame.WINDOW_HEIGHT){
-            isLiving(false);
+            setLiving(false);
         }
     }
 
@@ -117,18 +123,19 @@ public class Bullet {
      * @return
      */
     public boolean hitTank(){
-        for (Tank tank : Tanks.getTanks()) {
+        for (BaseTank tank : Tanks.getTanks()) {
             if (rectangle.intersects(tank.getRectangle())) {
                 if (getTank().equals(tank)) {
                     continue;
                 }
                 this.die();
                 tank.die();
-                Explodes.add(explode.boomStart(tank.getX(),tank.getY(),tank));
+                BaseExplode baseExplode = explode.boomStart(tank.getX(), tank.getY(), tank);
+                Explodes.add(baseExplode);
                 return true;
             }
         }
-       return false;
+        return false;
     }
 
     public BufferedImage getImage(){
@@ -150,79 +157,5 @@ public class Bullet {
         setWidth(image.getWidth());
         setHeight(image.getHeight());
         return image;
-    }
-
-
-    public int getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    private void setX(int x) {
-        this.x = x;
-    }
-
-    private void setY(int y) {
-        this.y = y;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    private void setWidth(int width) {
-        this.width = width;
-    }
-
-    private void setHeight(int height) {
-        this.height = height;
-    }
-
-    public boolean isLiving() {
-        return living;
-    }
-
-    public void isLiving(boolean living) {
-        this.living = living;
-    }
-
-    public Tank getTank() {
-        return tank;
-    }
-
-    public void setTank(Tank tank) {
-        this.tank = tank;
-    }
-
-    public Rectangle getRectangle() {
-        return rectangle;
-    }
-
-    public void setRectangle(Rectangle rectangle) {
-        this.rectangle = rectangle;
-    }
-
-    public Dir getDir() {
-        return dir;
-    }
-
-
-    public void setDir(Dir dir) {
-        this.dir = dir;
     }
 }

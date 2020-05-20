@@ -1,5 +1,11 @@
 package com.mashibing.tank;
 
+import com.mashibing.config.PropertiesMgr;
+import com.mashibing.factory.BadTankFactory;
+import com.mashibing.factory.GoodTankFactory;
+import com.mashibing.factory.TankFactory;
+import com.mashibing.fire.AroundFire;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,18 +17,29 @@ import java.util.List;
 public class Tanks {
 
     //所有坦克
-    private static List<Tank> tanks = new ArrayList<>();
+    private static List<BaseTank> tanks = new ArrayList<>();
 
     //自己的坦克
-    private static Tank myTank = new Tank(true);
+    private static BaseTank myTank;
+
+    //敌方坦克数量
+    private static Integer initTankNumber = PropertiesMgr.getInstance().getInt("initTankNumber");
+
+    //坦克工厂
+    private static TankFactory badTankFactory = new BadTankFactory();
+
+    private static TankFactory goodTankFactory = new GoodTankFactory();
+
 
     /**
      * 初始化所有坦克
      */
     static {
+        myTank = goodTankFactory.create();
+        myTank.setFire(new AroundFire());
         tanks.add(myTank);
-        for (int i = 0; i < 5; i++) {
-           tanks.add(new Tank(100 + i * 100, 100));
+        for (int i = 0; i < initTankNumber; i++) {
+           tanks.add(badTankFactory.create(100 + i * 100, 100));
         }
     }
 
@@ -32,24 +49,26 @@ public class Tanks {
     }
 
     public static void drawTanks(Graphics graphics){
-        Iterator<Tank> iterator = tanks.iterator();
+        Iterator<BaseTank> iterator = tanks.iterator();
 
         while (iterator.hasNext()) {
-            Tank tank = iterator.next();
+            BaseTank tank = iterator.next();
             tank.initTank(graphics);
-            tank.remove(iterator);
+            if (!tank.isLiving()) {
+                iterator.remove();
+            }
         }
     }
 
-    public static List<Tank> getTanks() {
+    public static List<BaseTank> getTanks() {
         return tanks;
     }
 
-    public static void addGamePlayer(Tank tank){
-        getTanks().add(tank);
+    public static void addGamePlayer(GoodTank goodTank){
+        getTanks().add(goodTank);
     }
 
-    public static Tank getMyTank() {
+    public static BaseTank getMyTank() {
         return myTank;
     }
 }

@@ -1,4 +1,4 @@
-package com.mashibing.tank;
+package com.mashibing;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

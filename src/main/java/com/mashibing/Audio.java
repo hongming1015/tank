@@ -1,4 +1,4 @@
-package com.mashibing.tank;
+package com.mashibing;
 
 import javax.sound.sampled.*;
 import java.io.IOException;
